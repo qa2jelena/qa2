@@ -54,7 +54,7 @@ public class DelfiTest {
         LOGGER.info("Starting our test!");
 
         // Article title for test:
-        String articleTitleForTest = "Политологи: пророссийские политики выступят против перевода обучения в школе на латышский язык";
+        String articleTitleForTest = "Трамп заявил, что у него для Северной Кореи остался лишь один вариант";
         LOGGER.info("Article title for test: " + articleTitleForTest);
 
         System.setProperty("webdriver.gecko.driver", "C:/Users/adminpc/Desktop/geckodriver.exe");
