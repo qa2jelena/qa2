@@ -66,15 +66,17 @@ public class DelfiTest {
 
         LOGGER.info("Opening web home page " + HOME_PAGE);
         driver.get(HOME_PAGE);
+
         LOGGER.info("Opening mob home page " + MOBILE_HOME_PAGE);
         mobileDriver.get(MOBILE_HOME_PAGE);
 
         List<WebElement> articleList = driver.findElements(ARTICLE);
         LOGGER.info("Found " + articleList.size() + " articles on web main page");
+
         List<WebElement> mobileArticleList = mobileDriver.findElements(MOBILE_ARTICLE);
         LOGGER.info("Found " + mobileArticleList.size() + " articles on mob main page");
 
-        /**
+        /*
          * WEB VERSION MAIN PAGE
          */
         HashMap<String, Integer> articlesTitlesAndCounts = new HashMap<String, Integer>();
@@ -83,8 +85,7 @@ public class DelfiTest {
         Long idToCheck;
 
         LOGGER.info("Getting article titles and comment counts on web main page");
-        for (int i = 0; i < articleList.size(); i++) {
-            WebElement element = articleList.get(i);
+        for (WebElement element : articleList) {
             // Title:
             String mainTitle = element.findElement(MAIN_ARTICLE_TITLE).getText();
             // ID:
@@ -104,14 +105,13 @@ public class DelfiTest {
         }
         LOGGER.info("Article titles and comment counts on web main page collected");
 
-        /**
+        /*
          * MOB VERSION MAIN PAGE
          */
         HashMap<String, Integer> mobileArticlesTitlesAndCounts = new HashMap<String, Integer>();
 
         LOGGER.info("Getting article titles and comment counts on mob main page");
-        for (int i = 0; i < mobileArticleList.size(); i++) {
-            WebElement element = mobileArticleList.get(i);
+        for (WebElement element : mobileArticleList) {
             // Title:
             String mobileMainTitle = element.findElement(MOBILE_MAIN_ARTICLE_TITLE).getText();
             // Comment count:
@@ -137,7 +137,7 @@ public class DelfiTest {
 
         Long articleID = articlesTitlesAndIDs.get(articleTitleForTest);
 
-        /**
+        /*
          * WEB VERSION ARTICLE PAGE AND ARTICLE COMMENT PAGE
          */
         String title, commentPageTitle;
@@ -190,11 +190,11 @@ public class DelfiTest {
             commentPageCount = regCount + anonCount;
         } else {
             LOGGER.info("Commenting not allowed");
-            commentPageTitle = "{Article without comment page}";
+            commentPageTitle = "Article without comment page";
             commentPageCount = 0;
         }
 
-        /**
+        /*
          * MOB VERSION ARTICLE PAGE AND ARTICLE COMMENT PAGE
          */
         String mobileTitle, mobileCommentPageTitle;
@@ -244,12 +244,12 @@ public class DelfiTest {
             mobileCommentPageCount = regCount + anonCount;
         } else {
             LOGGER.info("Commenting not allowed");
-            mobileCommentPageTitle = "{Article without comment page}";
+            mobileCommentPageTitle = "Article without comment page";
             mobileCommentPageCount = 0;
         }
 
         // Visual control
-        System.out.println("\nMain pages:");
+        System.out.println("Main pages:");
         System.out.println(mainCount);
         System.out.println(mobileMainCount);
 
@@ -270,7 +270,7 @@ public class DelfiTest {
 
         int deltaForTest = 3;
 
-        /**
+        /*
          * MAIN PAGES
          */
         // Comment count:
@@ -278,7 +278,7 @@ public class DelfiTest {
         String mainCountErrorMessage = "[WEB & MOB MAIN] Comment count is not equals: ";
         Assert.assertEquals(mainCountErrorMessage, mainCount, mobileMainCount, deltaForTest);
 
-        /**
+        /*
          * ARTICLE PAGES
          */
         // Titles:
@@ -296,7 +296,7 @@ public class DelfiTest {
         String articleCountErrorMessage = "[WEB & MOB ARTICLE] Comment count is not equals: ";
         Assert.assertEquals(articleCountErrorMessage, count, mobileCount, deltaForTest);
 
-        /**
+        /*
          * COMMENT PAGES
          */
         // Titles:
@@ -319,7 +319,7 @@ public class DelfiTest {
     }
 
     @Test
-    /**
+    /*
      * Давайте проверим Delfi.lv
      * Напишите тест, который проверит первые 5 статей основной и мобильной версии.
      * Проверять нужно на совпадение заголовков, количества комментариев
@@ -345,7 +345,7 @@ public class DelfiTest {
         List<WebElement> mobileArticleList = mobileDriver.findElements(MOBILE_ARTICLE);
         LOGGER.info("Found " + mobileArticleList.size() + " articles on mob main page");
 
-        /**
+        /*
          * WEB VERSION MAIN PAGE
          */
         List<String> mainTitles = new ArrayList<String>();
@@ -376,7 +376,7 @@ public class DelfiTest {
         }
         LOGGER.info("Article titles and comment counts on web main page collected");
 
-        /**
+        /*
          * MOB VERSION MAIN PAGE
          */
         List<String> mobileMainTitles = new ArrayList<String>();
@@ -398,7 +398,7 @@ public class DelfiTest {
         }
         LOGGER.info("Article titles and comment counts on mob main page collected");
 
-        /**
+        /*
          * WEB VERSION ARTICLE PAGE AND ARTICLE COMMENT PAGE
          */
         List<String> titles = new ArrayList<String>();
@@ -530,7 +530,7 @@ public class DelfiTest {
 
         for (int i = 0; i < mainTitles.size(); i++) {
 
-            /**
+            /*
              * MAIN PAGES
              */
             // Titles:
@@ -548,7 +548,7 @@ public class DelfiTest {
             String mainCountErrorMessage = "[WEB & MOB MAIN] Comment count is not equals for an article";
             Assert.assertEquals(mainCountErrorMessage + mainTitles.get(i), mainCounts.get(i), mobileMainCounts.get(i), deltaForTest);
 
-            /**
+            /*
              * ARTICLE PAGES
              */
             // Titles:
@@ -566,7 +566,7 @@ public class DelfiTest {
             String articleCountErrorMessage = "[WEB & MOB ARTICLE] Comment count is not equals for an article";
             Assert.assertEquals(articleCountErrorMessage + titles.get(i), counts.get(i), mobileCounts.get(i), deltaForTest);
 
-            /**
+            /*
              * COMMENT PAGES
              */
             // Titles:

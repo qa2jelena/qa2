@@ -1,7 +1,7 @@
-package delfiTestPageObject.mobilePages;
+package delfiTestPageObject.mobPages;
 
 import delfiTestPageObject.helpers.NumberFromTextHelper;
-import delfiTestPageObject.pages.BaseFunctions;
+import delfiTestPageObject.BaseFunctions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -9,12 +9,12 @@ import org.openqa.selenium.By;
 
 public class MobArticlePage {
 
-    BaseFunctions baseFunctions;
-    NumberFromTextHelper numberFromTextHelper = new NumberFromTextHelper();
-    private static final By MENU_BTN = By.xpath("//a[@class='menu-open']");
+    private BaseFunctions baseFunctions;
+    private NumberFromTextHelper numberFromTextHelper = new NumberFromTextHelper();
+    private static final By MENU_BTN = By.xpath(".//a[@class='menu-open']");
     private static final By TITLE = By.xpath(".//h1");
-    private static final By COMMENT_COUNT = By.xpath("//*[@id='article']//a[contains(@class,'commentCount')]");
-    private static final By READ_COMMENTS_LINK = By.xpath("//*[@id='comment-dark-skin-wrapper']//*[contains(@class,'comment-read-comments-link')]/a");
+    private static final By COMMENT_COUNT = By.xpath(".//*[@id='article']//a[contains(@class,'commentCount')]");
+    private static final By READ_COMMENTS_LINK = By.xpath(".//*[@id='comment-dark-skin-wrapper']//*[contains(@class,'comment-read-comments-link')]/a");
     private static final Logger LOGGER = LogManager.getLogger(MobArticlePage.class);
 
     public MobArticlePage(BaseFunctions bs) {
@@ -41,11 +41,7 @@ public class MobArticlePage {
 
     public Integer getCommentCount() {
         LOGGER.info("Getting article comment count");
-        if (baseFunctions.isPresentElement(COMMENT_COUNT)) {
-            String countToParse = baseFunctions.getElement(COMMENT_COUNT).getText();
-            return numberFromTextHelper.getIntegerFromString(countToParse);
-        }
-        return 0;
+        return baseFunctions.isPresentElement(COMMENT_COUNT) ? numberFromTextHelper.getIntegerFromString(baseFunctions.getElement(COMMENT_COUNT).getText()) : 0;
     }
 
     public boolean isReadCommentLinkPresent() {

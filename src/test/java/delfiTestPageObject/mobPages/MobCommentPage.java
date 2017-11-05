@@ -1,7 +1,8 @@
-package delfiTestPageObject.mobilePages;
+package delfiTestPageObject.mobPages;
 
 import delfiTestPageObject.helpers.NumberFromTextHelper;
-import delfiTestPageObject.pages.BaseFunctions;
+import delfiTestPageObject.BaseFunctions;
+import delfiTestPageObject.helpers.TrimTitleHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -9,12 +10,13 @@ import org.openqa.selenium.By;
 
 public class MobCommentPage {
 
-    BaseFunctions baseFunctions;
-    NumberFromTextHelper numberFromTextHelper = new NumberFromTextHelper();
-    private static final By MENU_BTN = By.xpath("//a[@class='menu-open']");
+    private BaseFunctions baseFunctions;
+    private TrimTitleHelper trimTitleHelper = new TrimTitleHelper();
+    private NumberFromTextHelper numberFromTextHelper = new NumberFromTextHelper();
+    private static final By MENU_BTN = By.xpath(".//a[@class='menu-open']");
     private static final By TITLE = By.xpath(".//h1//a//span[contains(@class,'text')]");
-    private static final By REG_COMMENT_COUNT = By.xpath("//*[@id='comments-listing']//a[contains(text(),'Зарегистрированные ')]/span");
-    private static final By ANON_COMMENT_COUNT = By.xpath("//*[@id='comments-listing']//a[contains(text(),'Анонимные ')]/span");
+    private static final By REG_COMMENT_COUNT = By.xpath(".//*[@id='comments-listing']//a[contains(text(),'Зарегистрированные ')]/span");
+    private static final By ANON_COMMENT_COUNT = By.xpath(".//*[@id='comments-listing']//a[contains(text(),'Анонимные ')]/span");
     private static final Logger LOGGER = LogManager.getLogger(MobCommentPage.class);
 
     public MobCommentPage(BaseFunctions bs) {
@@ -36,28 +38,21 @@ public class MobCommentPage {
 
     public String getTitle() {
         LOGGER.info("Getting article title");
-        String titleToParse = baseFunctions.getElement(TITLE).getText();
-        if (titleToParse.contains(": комментарии 1-")) {
-            titleToParse = titleToParse.substring(0, titleToParse.indexOf(": комментарии 1-"));
-        }
-        return titleToParse;
+        return trimTitleHelper.trimTitle(baseFunctions.getElement(TITLE).getText());
     }
 
     public Integer getRegisteredCommentCount() {
         LOGGER.info("Getting article registered comment count");
-        if (baseFunctions.isPresentElement(REG_COMMENT_COUNT)) {
-            String countToParse = baseFunctions.getElement(REG_COMMENT_COUNT).getText();
-            return numberFromTextHelper.getIntegerFromString(countToParse);
-        }
-        return 0;
+        return getCommentCountFrom(REG_COMMENT_COUNT);
     }
 
     public Integer getAnonymousCommentCount() {
         LOGGER.info("Getting article anonymous comment count");
-        if (baseFunctions.isPresentElement(ANON_COMMENT_COUNT)) {
-            String countToParse = baseFunctions.getElement(ANON_COMMENT_COUNT).getText();
-            return numberFromTextHelper.getIntegerFromString(countToParse);
-        }
-        return 0;
+        return getCommentCountFrom(ANON_COMMENT_COUNT);
+    }
+
+    private Integer getCommentCountFrom(By locator) {
+        LOGGER.info("Getting comment count");
+        return numberFromTextHelper.getIntegerFromString(baseFunctions.getElement(locator).getText());
     }
 }

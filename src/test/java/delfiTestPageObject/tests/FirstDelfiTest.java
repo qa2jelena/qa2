@@ -1,12 +1,13 @@
-package delfiTestPageObject;
+package delfiTestPageObject.tests;
 
-import delfiTestPageObject.mobilePages.MobArticlePage;
-import delfiTestPageObject.mobilePages.MobCommentPage;
-import delfiTestPageObject.mobilePages.MobHomePage;
-import delfiTestPageObject.pages.WebArticlePage;
-import delfiTestPageObject.pages.BaseFunctions;
-import delfiTestPageObject.pages.WebCommentPage;
-import delfiTestPageObject.pages.WebHomePage;
+import delfiTestPageObject.BaseFunctions;
+import delfiTestPageObject.helpers.CompareHelper;
+import delfiTestPageObject.mobPages.MobArticlePage;
+import delfiTestPageObject.mobPages.MobCommentPage;
+import delfiTestPageObject.mobPages.MobHomePage;
+import delfiTestPageObject.webPages.WebArticlePage;
+import delfiTestPageObject.webPages.WebCommentPage;
+import delfiTestPageObject.webPages.WebHomePage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -18,14 +19,13 @@ import java.util.List;
 
 public class FirstDelfiTest {
 
-    BaseFunctions webBaseFunctions = new BaseFunctions();
-    BaseFunctions mobBaseFunctions = new BaseFunctions();
+    private BaseFunctions webBaseFunctions = new BaseFunctions();
+    private BaseFunctions mobBaseFunctions = new BaseFunctions();
+    private CompareHelper compareHelper = new CompareHelper();
     private static final Logger LOGGER = LogManager.getLogger(FirstDelfiTest.class);
     private static final String WEB_HOME_PAGE_URL = "http://rus.delfi.lv";
     private static final String MOB_HOME_PAGE_URL = "http://m.rus.delfi.lv/";
 
-
-    @Test
     /**
      * Давайте проверим Delfi.lv
      * Напишите тест, который проверит первые 5 статей основной и мобильной версии.
@@ -33,6 +33,7 @@ public class FirstDelfiTest {
      * Проверяем на главной странице, странице самой статьи, и на странице комментариев (и для полной версии, и для мобильной)
      * make this test stable – if item count in each category will change test will still work
      */
+    @Test
     public void delfiTest() {
 
         int articleCountToTest = 5;
@@ -44,12 +45,12 @@ public class FirstDelfiTest {
         LOGGER.info("Opening mob home page");
         mobBaseFunctions.goToURL(MOB_HOME_PAGE_URL);
 
-        /**
-         * WEB HOME PAGE
+        /*
+          WEB HOME PAGE
          */
         LOGGER.info("Getting article list on web home page");
         WebHomePage webHomePage = new WebHomePage(webBaseFunctions);
-        List<WebElement> webArticleList = webHomePage.getArticleList();
+        List<WebElement> webArticleList = webHomePage.getAllArticlesList();
         LOGGER.info("Found " + webArticleList.size() + " articles on web home page");
 
         LOGGER.info("Getting article titles, IDs and comment counts on web home page");
@@ -70,7 +71,7 @@ public class FirstDelfiTest {
         }
         LOGGER.info("Article titles, IDs and comment counts on web home page gathered!");
 
-        /**
+        /*
          * MOB HOME PAGE
          */
         LOGGER.info("Getting article list on mob home page:");
@@ -92,7 +93,7 @@ public class FirstDelfiTest {
         }
         LOGGER.info("Article titles and comment counts on mob home page gathered!");
 
-        /**
+        /*
          * WEB ARTICLE AND COMMENT PAGE
          */
         LOGGER.info("Getting article titles and comment counts on web article and comment page");
@@ -117,6 +118,7 @@ public class FirstDelfiTest {
                 LOGGER.info("Opening web article page by link");
                 webBaseFunctions.goToURL("http://rus.delfi.lv/d?id=" + webHomeIDs.get(i));
             }
+
             // Title:
             webArticlePage.waitTitlePresence(webTimeOutInSeconds);
             webArticlePageTitles.add(webArticlePage.getTitle());
@@ -136,14 +138,14 @@ public class FirstDelfiTest {
                 webCommentPageAnonymousCommentCounts.add(webCommentPage.getAnonymousCommentCount());
             } else {
                 LOGGER.info("Commenting on the article is forbidden");
-                webCommentPageTitles.add("<Article without comment page>");
+                webCommentPageTitles.add("Article without comment page");
                 webCommentPageRegisteredCommentCounts.add(0);
                 webCommentPageAnonymousCommentCounts.add(0);
             }
         }
         LOGGER.info("Article titles and comment counts on web article and comment page gathered!");
 
-        /**
+        /*
          * MOB ARTICLE AND COMMENT PAGE
          */
         LOGGER.info("Getting article titles and comment counts on mob article and comment page");
@@ -168,6 +170,7 @@ public class FirstDelfiTest {
                 LOGGER.info("Opening mob article page by link");
                 mobBaseFunctions.goToURL("http://m.rus.delfi.lv/article.php?id=" + webHomeIDs.get(i));
             }
+
             // Title:
             mobArticlePage.waitTitlePresence(mobTimeOutInSeconds);
             mobArticlePageTitles.add(mobArticlePage.getTitle());
@@ -187,7 +190,7 @@ public class FirstDelfiTest {
                 mobCommentPageAnonymousCommentCounts.add(mobCommentPage.getAnonymousCommentCount());
             } else {
                 LOGGER.info("Commenting on the article is forbidden");
-                mobCommentPageTitles.add("<Article without comment page>");
+                mobCommentPageTitles.add("Article without comment page");
                 mobCommentPageRegisteredCommentCounts.add(0);
                 mobCommentPageAnonymousCommentCounts.add(0);
             }
@@ -221,62 +224,50 @@ public class FirstDelfiTest {
         int deltaForTest = 3;
 
         for (int i = 0; i < webHomeTitles.size(); i++) {
-
             LOGGER.info("Checking article Nr." + (i + 1));
 
-            /**
+            /*
              * HOME PAGES
              */
             // Titles:
             LOGGER.info("Comparing article titles on web and mob home page");
             String homeTitleErrorMessage = "[WEB & MOB HOME] Titles is not equals for an article: ";
-            if (webHomeTitles.get(i).length() == mobHomeTitles.get(i).length()) {
-                Assert.assertEquals(homeTitleErrorMessage + webHomeTitles.get(i), webHomeTitles.get(i), mobHomeTitles.get(i));
-            } else if (webHomeTitles.get(i).length() > mobHomeTitles.get(i).length()) {
-                Assert.assertTrue(homeTitleErrorMessage + webHomeTitles.get(i), webHomeTitles.get(i).matches("(.*)" + mobHomeTitles.get(i) + "(.*)"));
-            } else {
-                Assert.assertTrue(homeTitleErrorMessage + webHomeTitles.get(i), mobHomeTitles.get(i).matches("(.*)" + webHomeTitles.get(i) + "(.*)"));
-            }
+            compareHelper.compareTitles(homeTitleErrorMessage, webHomeTitles.get(i), mobHomeTitles.get(i));
             // Comment count:
             LOGGER.info("Comparing article comment count on web and mob home page");
-            String mainCountErrorMessage = "[WEB & MOB HOME] Comment counts is not equals for an article";
-            Assert.assertEquals(mainCountErrorMessage + webHomeTitles.get(i), webHomeCommentCounts.get(i), mobHomeCommentCounts.get(i), deltaForTest);
+            String homeCountErrorMessage = "[WEB & MOB HOME] Comment counts is not equals for an article";
+            Assert.assertEquals(homeCountErrorMessage + webHomeTitles.get(i),
+                    webHomeCommentCounts.get(i), mobHomeCommentCounts.get(i),
+                    deltaForTest);
 
-            /**
+            /*
              * ARTICLE PAGES
              */
             // Titles:
             LOGGER.info("Comparing article titles on web and mob article page");
             String articleTitleErrorMessage = "[WEB & MOB ARTICLE] Titles is not equals for an article: ";
-            if (webArticlePageTitles.get(i).length() == mobArticlePageTitles.get(i).length()) {
-                Assert.assertEquals(articleTitleErrorMessage + webArticlePageTitles.get(i), webArticlePageTitles.get(i), mobArticlePageTitles.get(i));
-            } else if (webArticlePageTitles.get(i).length() > mobArticlePageTitles.get(i).length()) {
-                Assert.assertTrue(articleTitleErrorMessage + webArticlePageTitles.get(i), webArticlePageTitles.get(i).matches("(.*)" + mobArticlePageTitles.get(i) + "(.*)"));
-            } else {
-                Assert.assertTrue(articleTitleErrorMessage + webArticlePageTitles.get(i), mobArticlePageTitles.get(i).matches("(.*)" + webArticlePageTitles.get(i) + "(.*)"));
-            }
+            compareHelper.compareTitles(articleTitleErrorMessage, webArticlePageTitles.get(i), mobArticlePageTitles.get(i));
             // Comment count:
             LOGGER.info("Comparing article comment count on web and mob article page");
             String articleCountErrorMessage = "[WEB & MOB ARTICLE] Comment counts is not equals for an article";
-            Assert.assertEquals(articleCountErrorMessage + webArticlePageTitles.get(i), webArticlePageCommentCounts.get(i), mobArticlePageCommentCounts.get(i), deltaForTest);
+            Assert.assertEquals(articleCountErrorMessage + webArticlePageTitles.get(i),
+                    webArticlePageCommentCounts.get(i), mobArticlePageCommentCounts.get(i),
+                    deltaForTest);
 
-            /**
+            /*
              * COMMENT PAGES
              */
             // Titles:
             LOGGER.info("Comparing article titles on web and mob article comment page");
             String commentPageTitleErrorMessage = "[WEB & MOB COMMENT PAGE] Titles is not equals for an article: ";
-            if (webCommentPageTitles.get(i).length() == mobCommentPageTitles.get(i).length()) {
-                Assert.assertEquals(commentPageTitleErrorMessage + webCommentPageTitles.get(i), webCommentPageTitles.get(i), mobCommentPageTitles.get(i));
-            } else if (webCommentPageTitles.get(i).length() > mobCommentPageTitles.get(i).length()) {
-                Assert.assertTrue(commentPageTitleErrorMessage + webCommentPageTitles.get(i), webCommentPageTitles.get(i).matches("(.*)" + mobCommentPageTitles.get(i) + "(.*)"));
-            } else {
-                Assert.assertTrue(commentPageTitleErrorMessage + webCommentPageTitles.get(i), mobCommentPageTitles.get(i).matches("(.*)" + webCommentPageTitles.get(i) + "(.*)"));
-            }
+            compareHelper.compareTitles(commentPageTitleErrorMessage, webCommentPageTitles.get(i), mobCommentPageTitles.get(i));
             // Comment count:
             LOGGER.info("Comparing article comment count on web and mob article comment page");
             String commentPageCountErrorMessage = "[WEB & MOB COMMENT PAGE] Comment count is not equals for an article";
-            Assert.assertEquals(commentPageCountErrorMessage + webCommentPageTitles.get(i), webCommentPageRegisteredCommentCounts.get(i) + webCommentPageAnonymousCommentCounts.get(i), mobCommentPageRegisteredCommentCounts.get(i) + mobCommentPageAnonymousCommentCounts.get(i), deltaForTest);
+            Assert.assertEquals(commentPageCountErrorMessage + webCommentPageTitles.get(i),
+                    webCommentPageRegisteredCommentCounts.get(i) + webCommentPageAnonymousCommentCounts.get(i),
+                    mobCommentPageRegisteredCommentCounts.get(i) + mobCommentPageAnonymousCommentCounts.get(i),
+                    deltaForTest);
         }
 
         LOGGER.info("Quiting web browser window");

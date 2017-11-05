@@ -1,5 +1,6 @@
-package delfiTestPageObject.pages;
+package delfiTestPageObject.webPages;
 
+import delfiTestPageObject.BaseFunctions;
 import delfiTestPageObject.helpers.NumberFromTextHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,11 +9,11 @@ import org.openqa.selenium.By;
 
 public class WebArticlePage {
 
-    BaseFunctions baseFunctions;
-    NumberFromTextHelper numberFromTextHelper = new NumberFromTextHelper();
+    private BaseFunctions baseFunctions;
+    private NumberFromTextHelper numberFromTextHelper = new NumberFromTextHelper();
     private static final By TITLE = By.xpath(".//h1/span");
-    private static final By COMMENT_COUNT = By.xpath("//*[@id='article']//a[contains(@class,'comment-count')]");
-    private static final By READ_COMMENTS_BTN = By.xpath("//*[@id='comment-dark-skin-wrapper']//a[contains(@class,'comment-add-form-listing-url comment-add-form-listing-url-registered')]");
+    private static final By COMMENT_COUNT = By.xpath(".//*[@id='article']//a[contains(@class,'comment-count')]");
+    private static final By READ_COMMENTS_BTN = By.xpath(".//*[@id='comment-dark-skin-wrapper']//a[contains(@class,'comment-add-form-listing-url comment-add-form-listing-url-registered')]");
     private static final Logger LOGGER = LogManager.getLogger(WebArticlePage.class);
 
     public WebArticlePage(BaseFunctions bs) {
@@ -36,11 +37,7 @@ public class WebArticlePage {
 
     public Integer getCommentCount() {
         LOGGER.info("Getting article comment count");
-        if (baseFunctions.isPresentElement(COMMENT_COUNT)) {
-            String countToParse = baseFunctions.getElement(COMMENT_COUNT).getText();
-            return numberFromTextHelper.getIntegerFromString(countToParse);
-        }
-        return 0;
+        return baseFunctions.isPresentElement(COMMENT_COUNT) ? numberFromTextHelper.getIntegerFromString(baseFunctions.getElement(COMMENT_COUNT).getText()) : 0;
     }
 
     public boolean isReadCommentButtonPresent() {
