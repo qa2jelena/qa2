@@ -1,6 +1,5 @@
 package cucumberStepDefinitions;
 
-import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -13,13 +12,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 
-public class StepDefs {
+public class DelfiStepDefs {
 
     private BaseFunctions webBaseFunctions = new BaseFunctions();
     private BaseFunctions mobBaseFunctions = new BaseFunctions();
     private static final String WEB_HOME_PAGE_URL = "http://rus.delfi.lv";
     private static final String MOB_HOME_PAGE_URL = "http://m.rus.delfi.lv/";
-    private static final Logger LOGGER = LogManager.getLogger(StepDefs.class);
+    private static final Logger LOGGER = LogManager.getLogger(DelfiStepDefs.class);
 
     private String articleTitleForTest;
     private WebHomePage webHomePage;
@@ -31,18 +30,18 @@ public class StepDefs {
 
     @Given("Article title for test: (.*)")
     public void article_title_for_test(String title) {
-        this.articleTitleForTest = title;
+        articleTitleForTest = title;
         LOGGER.info("Article title for test: " + articleTitleForTest);
     }
 
-    @Given("Open web home page")
+    @When("Open web home page")
     public void open_web_home_page() {
         LOGGER.info("Opening web home page");
         webBaseFunctions.goToURL(WEB_HOME_PAGE_URL);
         webHomePage = new WebHomePage(webBaseFunctions);
     }
 
-    @Given("Open mob home page")
+    @When("Open mob home page")
     public void open_mob_home_page() {
         LOGGER.info("Opening mob home page");
         mobBaseFunctions.goToURL(MOB_HOME_PAGE_URL);
@@ -96,7 +95,7 @@ public class StepDefs {
         LOGGER.info("***** TEST IS SUCCESSFUL! *****");
     }
 
-    @After
+    @Then("Quit browser windows")
     public void quit_browser_windows() {
         LOGGER.info("Quiting web browser window");
         webBaseFunctions.quitDriver();

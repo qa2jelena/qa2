@@ -25,7 +25,6 @@ public class DelfiTest {
     private static final By COMMENT_PAGE_ARTICLE_TITLE = By.xpath(".//h1/a");
     private static final By COMMENT_PAGE_ARTICLE_REG_COMMENT_COUNT = By.xpath("//*[@id='comments-listing']//a[contains(text(),'Зарегистрированные ')]/span");
     private static final By COMMENT_PAGE_ARTICLE_ANON_COMMENT_COUNT = By.xpath("//*[@id='comments-listing']//a[contains(text(),'Анонимные ')]/span");
-
     private static final By MOBILE_ARTICLE = By.className("md-mosaic-title");
     private static final By MOBILE_MAIN_ARTICLE_TITLE = By.xpath("a[contains(@class,'md-scrollpos')]");
     private static final By MOBILE_MAIN_ARTICLE_COMMENT_COUNT = By.xpath("a[contains(@class,'commentCount')]");
@@ -35,14 +34,11 @@ public class DelfiTest {
     private static final By MOBILE_COMMENT_PAGE_ARTICLE_TITLE = By.xpath(".//h1//a//span[contains(@class,'text')]");
     private static final By MOBILE_COMMENT_PAGE_ARTICLE_REG_COMMENT_COUNT = By.xpath("//*[@id='comments-listing']//a[contains(text(),'Зарегистрированные ')]/span");
     private static final By MOBILE_COMMENT_PAGE_ARTICLE_ANON_COMMENT_COUNT = By.xpath("//*[@id='comments-listing']//a[contains(text(),'Анонимные ')]/span");
-
     private static final Logger LOGGER = LogManager.getLogger(DelfiTest.class);
-
     private String HOME_PAGE = "http://rus.delfi.lv";
     private String MOBILE_HOME_PAGE = "http://m.rus.delfi.lv/";
 
-    @Test
-    /**
+    /*
      * Pishem vtoroj test, mozhem v tom zhe klasse.
      * Zadanie: V peremennoj ja ukazivaju tekst toj statji, kotoruju ja hochu proverith,
      * ljubuju iz 300 na glavnoj stranice web versii delfi,
@@ -50,6 +46,7 @@ public class DelfiTest {
      * i proveraet praviljnostj nazvanija i kolichestvo kommentariev
      * i v WEB i v Mobile versii sajta, na glavnih stranicah, stranicah samoj statji i stranicah komentariev :)
      */
+    @Test
     public void secondDelfiTest() {
         LOGGER.info("Starting our test!");
 
@@ -58,6 +55,7 @@ public class DelfiTest {
         LOGGER.info("Article title for test: " + articleTitleForTest);
 
         System.setProperty("webdriver.gecko.driver", "C:/Users/adminpc/Desktop/geckodriver.exe");
+
         WebDriver driver = new FirefoxDriver();
         driver.manage().window().maximize();
 
@@ -79,9 +77,8 @@ public class DelfiTest {
         /*
          * WEB VERSION MAIN PAGE
          */
-        HashMap<String, Integer> articlesTitlesAndCounts = new HashMap<String, Integer>();
-
-        HashMap<String, Long> articlesTitlesAndIDs = new HashMap<String, Long>();
+        HashMap<String, Integer> articlesTitlesAndCounts = new HashMap<>();
+        HashMap<String, Long> articlesTitlesAndIDs = new HashMap<>();
         Long idToCheck;
 
         LOGGER.info("Getting article titles and comment counts on web main page");
@@ -108,7 +105,7 @@ public class DelfiTest {
         /*
          * MOB VERSION MAIN PAGE
          */
-        HashMap<String, Integer> mobileArticlesTitlesAndCounts = new HashMap<String, Integer>();
+        HashMap<String, Integer> mobileArticlesTitlesAndCounts = new HashMap<>();
 
         LOGGER.info("Getting article titles and comment counts on mob main page");
         for (WebElement element : mobileArticleList) {
@@ -129,6 +126,7 @@ public class DelfiTest {
         // Checking article existence
         LOGGER.info("Checking article existence on web main page");
         Assert.assertTrue("[FULL MAIN PAGE] Article with title " + articleTitleForTest + " not found", articlesTitlesAndCounts.containsKey(articleTitleForTest));
+
         LOGGER.info("Checking article existence on mob main page");
         Assert.assertTrue("[MOBILE MAIN PAGE] Article with title " + articleTitleForTest + " not found", mobileArticlesTitlesAndCounts.containsKey(articleTitleForTest));
 
@@ -318,7 +316,6 @@ public class DelfiTest {
         mobileDriver.quit();
     }
 
-    @Test
     /*
      * Давайте проверим Delfi.lv
      * Напишите тест, который проверит первые 5 статей основной и мобильной версии.
@@ -326,6 +323,7 @@ public class DelfiTest {
      * Проверяем на главной странице, странице самой статьи, и на странице комментариев (и для полной версии, и для мобильной)
      * make this test stable – if item count in each category will change test will still work
      */
+    @Test
     public void delfiTest() {
         LOGGER.info("Starting our test!");
         System.setProperty("webdriver.gecko.driver", "C:/Users/adminpc/Desktop/geckodriver.exe");
@@ -348,10 +346,10 @@ public class DelfiTest {
         /*
          * WEB VERSION MAIN PAGE
          */
-        List<String> mainTitles = new ArrayList<String>();
-        List<Integer> mainCounts = new ArrayList<Integer>();
+        List<String> mainTitles = new ArrayList<>();
+        List<Integer> mainCounts = new ArrayList<>();
 
-        List<Long> idsToCheck = new ArrayList<Long>();
+        List<Long> idsToCheck = new ArrayList<>();
 
         int articleCountToTest = 5;
         LOGGER.info("Article count to test: " + articleCountToTest);
@@ -379,8 +377,8 @@ public class DelfiTest {
         /*
          * MOB VERSION MAIN PAGE
          */
-        List<String> mobileMainTitles = new ArrayList<String>();
-        List<Integer> mobileMainCounts = new ArrayList<Integer>();
+        List<String> mobileMainTitles = new ArrayList<>();
+        List<Integer> mobileMainCounts = new ArrayList<>();
 
         LOGGER.info("Getting article titles and comment counts on mob main page");
         for (int i = 0; i < articleCountToTest; i++) {
@@ -401,10 +399,10 @@ public class DelfiTest {
         /*
          * WEB VERSION ARTICLE PAGE AND ARTICLE COMMENT PAGE
          */
-        List<String> titles = new ArrayList<String>();
-        List<Integer> counts = new ArrayList<Integer>();
-        List<String> commentPageTitles = new ArrayList<String>();
-        List<Integer> commentPageCounts = new ArrayList<Integer>();
+        List<String> titles = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
+        List<String> commentPageTitles = new ArrayList<>();
+        List<Integer> commentPageCounts = new ArrayList<>();
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
         LOGGER.info("Getting article titles and comment counts on web article and comment page");
@@ -453,13 +451,13 @@ public class DelfiTest {
         }
         LOGGER.info("Article titles and comment counts on web article and comment page collected");
 
-        /**
+        /*
          * MOB VERSION ARTICLE PAGE AND ARTICLE COMMENT PAGE
          */
-        List<String> mobileTitles = new ArrayList<String>();
-        List<Integer> mobileCounts = new ArrayList<Integer>();
-        List<String> mobileCommentPageTitles = new ArrayList<String>();
-        List<Integer> mobileCommentPageCounts = new ArrayList<Integer>();
+        List<String> mobileTitles = new ArrayList<>();
+        List<Integer> mobileCounts = new ArrayList<>();
+        List<String> mobileCommentPageTitles = new ArrayList<>();
+        List<Integer> mobileCommentPageCounts = new ArrayList<>();
 
         WebDriverWait mobileWait = new WebDriverWait(mobileDriver, 10);
         LOGGER.info("Getting article titles and comment counts on mob article and comment page");
